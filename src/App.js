@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react'
-import raw from './fileTxt/fb71d972'
 import './App.css'
 
 function App() {
@@ -7,11 +6,13 @@ function App() {
     const [result, setResult] = useState(null)
     const [loading, setLoading] = useState(false);
 
+
     const handleChange = e => {
         const fileReader = new FileReader()
         fileReader.readAsText(e.target.files[0], 'UTF-8')
         fileReader.onload = e => {
             setFile(e.target.result)
+            console.log(e.target.result)
         }
     }
 
@@ -28,6 +29,8 @@ function App() {
         console.log(startTime)
         let sum = 0
         let median = 0
+        let max_increasing_sequence = [];
+        let max_decreasing_sequence = [];
         let length_of_max_increasing_sequence = 0
         let length_of_current_increasing_sequence = 0
         let length_of_max_decreasing_sequence = 0
@@ -41,6 +44,7 @@ function App() {
             if (Number(num) > Number(numbers_str[idx + 1])) {
                 if (length_of_max_decreasing_sequence < length_of_current_decreasing_sequence) {
                     length_of_max_decreasing_sequence = length_of_current_decreasing_sequence
+                    max_decreasing_sequence = numbers_str.slice(idx - length_of_max_decreasing_sequence, idx + 1);
                 }
                 length_of_current_decreasing_sequence = 0
                 length_of_current_increasing_sequence++
@@ -48,6 +52,7 @@ function App() {
             if (Number(num) < Number(numbers_str[idx + 1])) {
                 if (length_of_max_increasing_sequence < length_of_current_increasing_sequence) {
                     length_of_max_increasing_sequence = length_of_current_increasing_sequence
+                    max_increasing_sequence = numbers_str.slice(idx - length_of_max_increasing_sequence, idx + 1);
                 }
                 length_of_current_increasing_sequence = 0
                 length_of_current_decreasing_sequence++
@@ -74,7 +79,9 @@ function App() {
         console.log(min)
         console.log(center)
         console.log(median)
+        console.log(max_increasing_sequence)
         console.log(length_of_max_increasing_sequence)
+        console.log(max_decreasing_sequence)
         console.log(length_of_max_decreasing_sequence)
         const endTime = new Date().toLocaleTimeString()
         setResult({
@@ -82,6 +89,8 @@ function App() {
             min,
             center,
             median,
+            max_increasing_sequence,
+            max_decreasing_sequence,
             length_of_max_increasing_sequence,
             length_of_max_decreasing_sequence,
             endTime,
@@ -104,8 +113,8 @@ function App() {
                     <p>Min: {result.min}</p>
                     <p>Center arithmetic: {result.center}</p>
                     <p>Median: {result.median}</p>
-                    <p>max increasing sequence: {result.length_of_max_increasing_sequence}</p>
-                    <p>max decreasing sequence: {result.length_of_max_decreasing_sequence}</p>
+                    <p>max increasing sequence: {result.max_increasing_sequence.join(', ')}</p>
+                    <p>max decreasing sequence: {result.max_decreasing_sequence.join(', ')}</p>
                     <p>Start time: {result.startTime}</p>
                     <p>End time: {result.endTime}</p>
                 </div>
